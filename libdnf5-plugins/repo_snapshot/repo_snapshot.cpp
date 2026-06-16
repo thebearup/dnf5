@@ -30,8 +30,8 @@ constexpr const char * attrs_value[]{
 
 class RepoSnapshotPlugin : public plugin::IPlugin {
 public:
-    RepoSnapshotPlugin(libdnf5::plugin::IPluginData & data, libdnf5::ConfigParser & config)
-        : IPlugin(data), config(config) {}
+    RepoSnapshotPlugin(libdnf5::plugin::IPluginData & data, libdnf5::ConfigParser &)
+        : IPlugin(data) {}
     ~RepoSnapshotPlugin() override = default;
 
     PluginAPIVersion get_api_version() const noexcept override { return REQUIRED_PLUGIN_API_VERSION; }
@@ -52,24 +52,19 @@ public:
     void repos_loaded() override;
 
 private:
-    libdnf5::ConfigParser & config;
     time_t snapshot_time{0};
     std::set<std::string> exclude_repos;
 };
 
 
 void RepoSnapshotPlugin::init() {
-    // Read snapshot_time from plugin config, then fall back to environment variable.
+    // Read snapshot_time from environment variable (set by the dnf5 CLI plugin
+    // when --snapshot-time is passed on the command line).
     std::string time_str;
 
-    if (config.has_option("main", "snapshot_time")) {
-        time_str = config.get_value("main", "snapshot_time");
-    }
-    if (time_str.empty()) {
-        const char * env = std::getenv("DNF5_SNAPSHOT_TIME");
-        if (env) {
-            time_str = env;
-        }
+    const char * env = std::getenv("DNF5_SNAPSHOT_TIME");
+    if (env) {
+        time_str = env;
     }
 
     if (time_str.empty()) {
@@ -87,16 +82,12 @@ void RepoSnapshotPlugin::init() {
         return;
     }
 
-    // Read excluded repos from plugin config, then fall back to environment variable.
+    // Read excluded repos from environment variable (set by the dnf5 CLI plugin
+    // when --snapshot-exclude-repos is passed on the command line).
     std::string exclude_str;
-    if (config.has_option("main", "snapshot_exclude_repos")) {
-        exclude_str = config.get_value("main", "snapshot_exclude_repos");
-    }
-    if (exclude_str.empty()) {
-        const char * env = std::getenv("DNF5_SNAPSHOT_EXCLUDE_REPOS");
-        if (env) {
-            exclude_str = env;
-        }
+    const char * exclude_env = std::getenv("DNF5_SNAPSHOT_EXCLUDE_REPOS");
+    if (exclude_env) {
+        exclude_str = exclude_env;
     }
 
     if (!exclude_str.empty()) {

@@ -22,3 +22,7 @@ add_subdirectory("repomanage_plugin")
 if(WITH_PLUGIN_MANIFEST)
 add_subdirectory("manifest_plugin")
 endif()
+
+if(WITH_PLUGIN_REPO_SNAPSHOT)
+add_subdirectory("repo_snapshot_plugin")
+endif()
