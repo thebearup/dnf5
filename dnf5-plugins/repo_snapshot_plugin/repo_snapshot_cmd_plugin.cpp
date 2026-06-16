@@ -66,11 +66,7 @@ void RepoSnapshotCmdPlugin::init() {
            [[maybe_unused]] const char * option,
            const char * value) {
             // Bridge the CLI value to an environment variable for the libdnf5 plugin.
-#ifdef _WIN32
-            _putenv_s("DNF5_SNAPSHOT_TIME", value);
-#else
             setenv("DNF5_SNAPSHOT_TIME", value, 1);
-#endif
             return true;
         });
     global_options_group.register_argument(snapshot_time);
@@ -87,11 +83,7 @@ void RepoSnapshotCmdPlugin::init() {
            [[maybe_unused]] const char * option,
            const char * value) {
             // Bridge the CLI value to an environment variable for the libdnf5 plugin.
-#ifdef _WIN32
-            _putenv_s("DNF5_SNAPSHOT_EXCLUDE_REPOS", value);
-#else
             setenv("DNF5_SNAPSHOT_EXCLUDE_REPOS", value, 1);
-#endif
             return true;
         });
     global_options_group.register_argument(snapshot_exclude);
