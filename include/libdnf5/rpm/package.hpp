@@ -242,6 +242,12 @@ public:
     // @replaces libdnf:libdnf/hy-package.h:function:dnf_package_get_buildtime(DnfPackage * pkg)
     unsigned long long get_build_time() const;
 
+    /// @return File publish time from repo metadata (`<time file="...">`).
+    /// This is the time the package was published to the repository.
+    /// Requires libsolv with SOLVABLE_FILETIME support. Returns 0 if unavailable.
+    /// @since 5.2
+    unsigned long long get_file_time() const;
+
     // TODO not supported by libsolv: https://github.com/openSUSE/libsolv/issues/400
     //std::string get_build_host();
 

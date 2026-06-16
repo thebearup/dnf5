@@ -176,6 +176,14 @@ unsigned long long Package::get_build_time() const {
     return get_rpm_pool(p_impl->base).lookup_num(p_impl->id.id, SOLVABLE_BUILDTIME);
 }
 
+unsigned long long Package::get_file_time() const {
+#ifdef SOLVABLE_FILETIME
+    return get_rpm_pool(p_impl->base).lookup_num(p_impl->id.id, SOLVABLE_FILETIME);
+#else
+    return 0;
+#endif
+}
+
 // TODO not supported by libsolv: https://github.com/openSUSE/libsolv/issues/400
 //std::string Package::get_build_host() {
 //    return libdnf5::utils::string::c_to_str(lookup_cstring(get_rpm_pool(base).id2solvable(id.id), SOLVABLE_BUILDHOST));
