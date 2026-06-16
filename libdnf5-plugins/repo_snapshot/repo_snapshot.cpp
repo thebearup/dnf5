@@ -151,14 +151,7 @@ void RepoSnapshotPlugin::repos_loaded() {
 
         // Prefer file_time (repo publish time) over build_time.
         auto file_time = static_cast<time_t>(pkg.get_file_time());
-        time_t effective_time;
-        if (file_time > 0) {
-            effective_time = file_time;
-        } else {
-            effective_time = static_cast<time_t>(pkg.get_build_time());
-        }
-
-        if (effective_time > 0 && effective_time > snapshot_time) {
+        if (file_time > snapshot_time) {
             to_exclude.add(pkg);
         }
     }
